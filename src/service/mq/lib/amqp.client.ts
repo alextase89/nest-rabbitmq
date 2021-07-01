@@ -1,7 +1,13 @@
 const amqp = require('amqplib');
 
-class QueueClient {
-  constructor(connectionString, queueName = null) {
+export class QueueClient {
+  private readonly connectionString: string;
+  private readonly queueName: string;
+  private connection: any;
+  private channel: any;
+  private retry: number;
+
+  constructor(connectionString: string, queueName: string = null) {
     this.connectionString = connectionString;
     this.queueName = queueName;
 
@@ -10,7 +16,7 @@ class QueueClient {
     this.retry = 0;
   }
 
-  async waitForConnection(interval = 1000, maxRetry) {
+  async waitForConnection(interval = 100, maxRetry: number) {
     console.log('... connecting to Queue ...');
 
     if (maxRetry > 0) {
@@ -26,7 +32,7 @@ class QueueClient {
     } catch (err) {
       console.log('Could not connect to Queue, retrying...');
       await this.wait(interval);
-      await this.waitForConnection(maxRetry);
+      await this.waitForConnection(100, maxRetry);
     }
   }
 
@@ -49,7 +55,7 @@ class QueueClient {
     await this.connection.close();
   }
 
-  async produce(queueName, message) {
+  async produce(queueName: string, message: any) {
     if (!this.channel) {
       throw new Error('There is no connection to Queue');
     }
@@ -66,5 +72,3 @@ class QueueClient {
     });
   }
 }
-
-module.exports = QueueClient;

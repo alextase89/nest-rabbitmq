@@ -1,12 +1,12 @@
 import * as config from '../../prop-config';
-const QueueClient = require('./lib/amqp.client');
+import { QueueClient } from './lib/amqp.client';
 
 export const listenerMessageQueue = async () => {
   const CONN_URL = `amqp://${config.rabbit.user}:${config.rabbit.pass}@${config.rabbit.endpoint}`;
   const consumer = new QueueClient(CONN_URL, 'nest-test');
 
   try {
-    await consumer.waitForConnection(1000);
+    await consumer.waitForConnection(100, 1000);
   } catch (err) {
     console.log(err.message);
     process.exit(1);
