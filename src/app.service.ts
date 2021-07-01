@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { publishToQueue } from './mq.service';
-import { Message } from './interfaces';
+import { Message, ResponseMessage } from "./interfaces";
 
 @Injectable()
 export class AppService {
@@ -8,8 +8,8 @@ export class AppService {
     return 'Hello World!';
   }
 
-  sendMessage(message: Message): string {
-    publishToQueue('nest-test', message);
-    return 'ok';
+  async sendMessage(message: Message): Promise<ResponseMessage> {
+    await publishToQueue('nest-test', message);
+    return { message: 'message sent' };
   }
 }

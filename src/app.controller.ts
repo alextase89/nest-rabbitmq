@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Message } from './interfaces';
+import { Message, ResponseMessage } from "./interfaces";
 
 @Controller()
 export class AppController {
@@ -12,7 +12,7 @@ export class AppController {
   }
 
   @Post('/send-message')
-  sendMessage(@Body() message: Message): string {
+  sendMessage(@Body() message: Message): Promise<ResponseMessage> {
     return this.appService.sendMessage(message);
   }
 }
