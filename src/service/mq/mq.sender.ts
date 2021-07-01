@@ -1,21 +1,11 @@
 import * as config from '../../prop-config';
 import { Message } from '../../interfaces';
 
-const amqp = require('amqplib/callback_api');
+const QueueClient = require('./lib/amqp.client');
 const CONN_URL = `amqp://${config.rabbit.user}:${config.rabbit.pass}@${config.rabbit.endpoint}`;
-let ch = null;
-
-amqp.connect(CONN_URL, function (err, conn) {
-  conn.createChannel(function (err, channel) {
-    ch = channel;
-  });
-});
+const ch = new QueueClient(CONN_URL);
+ch.connect();
 
 export const publishToQueue = async (queueName: string, message: Message) => {
-  ch.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
+  await ch.produce(queueName, JSON.stringify(message));
 };
-
-process.on('exit', (code) => {
-  ch.close();
-  console.log(`Closing rabbitmq channel`);
-});
