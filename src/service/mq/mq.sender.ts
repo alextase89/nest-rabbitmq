@@ -1,7 +1,8 @@
-const amqp = require('amqplib/callback_api');
-import { Message } from './interfaces';
+import * as config from '../../prop-config';
+import { Message } from '../../interfaces';
 
-const CONN_URL = 'amqp://guest:guest@localhost:5672';
+const amqp = require('amqplib/callback_api');
+const CONN_URL = `amqp://${config.rabbit.user}:${config.rabbit.pass}@${config.rabbit.endpoint}`;
 let ch = null;
 
 amqp.connect(CONN_URL, function (err, conn) {

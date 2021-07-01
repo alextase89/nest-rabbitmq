@@ -1,0 +1,7 @@
+{
+  "rabbit": {
+    "endpoint": "localhost:5672",
+    "user": "guest",
+    "pass": "guest"
+  }
+}
